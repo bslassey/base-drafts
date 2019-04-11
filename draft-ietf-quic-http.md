@@ -498,33 +498,25 @@ HEADERS frames can only be sent on request / push streams.
 The PRIORITY (type=0x2) frame specifies the client-advised priority of a
 request, server push or placeholder.
 
-A PRIORITY frame identifies an element to prioritize, and an element upon which
-it depends.  A Prioritized ID or Dependency ID identifies a client-initiated
+A PRIORITY frame identifies an element to prioritize.  A Prioritized ID identifies a client-initiated
 request using the corresponding stream ID, a server push using a Push ID (see
 {{frame-push-promise}}), or a placeholder using a Placeholder ID (see
 {{placeholders}}).
 
-When a client initiates a request, a PRIORITY frame MAY be sent as the first
-frame of the stream, creating a dependency on an existing element.  In order to
-ensure that prioritization is processed in a consistent order, any subsequent
-PRIORITY frames for that request MUST be sent on the control stream.  A
-PRIORITY frame received after other frames on a request stream MUST be treated
+In order to ensure that prioritization is processed in a consistent order
+PRIORITY frames MUST be sent on the control stream.  A
+PRIORITY frame received on a request stream MUST be treated
 as a stream error of type HTTP_UNEXPECTED_FRAME.
 
-If, by the time a new request stream is opened, its priority information
-has already been received via the control stream, the PRIORITY frame
-sent on the request stream MUST be ignored.
 
 ~~~~~~~~~~  drawing
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|PT |DT | Empty |         [Prioritized Element ID (i)]        ...
+|PT |   Empty   |         [Prioritized Element ID (i)]        ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                [Element Dependency ID (i)]                  ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Weight (8)  |
-+-+-+-+-+-+-+-+-+
+|   Weight (i) ...
++-+-+-+-+-+-+-+-+-+
 ~~~~~~~~~~
 {: #fig-priority title="PRIORITY frame payload"}
 
@@ -535,12 +527,9 @@ The PRIORITY frame payload has the following fields:
     {{prioritized-element-types}}). When sent on a request stream, this MUST be
     set to `11`.  When sent on the control stream, this MUST NOT be set to `11`.
 
-  DT (Element Dependency Type):
-  : A two-bit field indicating the type of element being depended on (see
-    {{element-dependency-types}}).
-
+  
   Empty:
-  : A four-bit field which MUST be zero when sent and MUST be ignored
+  : A six-bit field which MUST be zero when sent and MUST be ignored
     on receipt.
 
   Prioritized Element ID:
@@ -549,21 +538,13 @@ The PRIORITY frame payload has the following fields:
     request stream, the Push ID of a promised resource, a Placeholder ID of a
     placeholder, or is absent.
 
-  Element Dependency ID:
-  : A variable-length integer that identifies the element on which a dependency
-    is being expressed. Depending on the value of Dependency Type, this contains
-    the Stream ID of a request stream, the Push ID of a promised resource, the
-    Placeholder ID of a placeholder, or is absent.  For details of
-    dependencies, see {{priority}} and {{!RFC7540}}, Section 5.3.
-
   Weight:
-  : An unsigned 8-bit integer representing a priority weight for the prioritized
-    element (see {{!RFC7540}}, Section 5.3). Add one to the value to obtain a
-    weight between 1 and 256.
+  : An unsigned variable-length integer representing a priority weight for the prioritized
+    element (see {{!RFC7540}}, Section 5.3). The value should be interpretted as the integer
+    value left shifted by 64 minus the lenght of the field in bits. 
 
-The values for the Prioritized Element Type ({{prioritized-element-types}}) and
-Element Dependency Type ({{element-dependency-types}}) imply the interpretation
-of the associated Element ID fields.
+The values for the Prioritized Element Type ({{prioritized-element-types}}) imply
+the interpretation of the associated Element ID fields.
 
 | PT Bits | Type Description | Prioritized Element ID Contents |
 | ------- | ---------------- | ------------------------------- |
@@ -572,24 +553,6 @@ of the associated Element ID fields.
 | 10      | Placeholder      | Placeholder ID                  |
 | 11      | Current stream   | Absent                          |
 {: #prioritized-element-types title="Prioritized Element Types"}
-
-| DT Bits | Type Description | Element Dependency ID Contents |
-| ------- | ---------------- | ------------------------------ |
-| 00      | Request stream   | Stream ID                      |
-| 01      | Push stream      | Push ID                        |
-| 10      | Placeholder      | Placeholder ID                 |
-| 11      | Root of the tree | Absent                         |
-{: #element-dependency-types title="Element Dependency Types"}
-
-Note that unlike in {{!RFC7540}}, the root of the tree cannot be referenced
-using a Stream ID of 0, as in QUIC stream 0 carries a valid HTTP request.  The
-root of the tree cannot be reprioritized.  A PRIORITY frame sent on a request
-stream with the Prioritized Element Type set to any value other than `11` or
-which expresses a dependency on a request with a greater Stream ID than the
-current stream MUST be treated as a stream error of type HTTP_MALFORMED_FRAME.
-Likewise, a PRIORITY frame sent on a control stream with the Prioritized Element
-Type set to `11` MUST be treated as a connection error of type
-HTTP_MALFORMED_FRAME.
 
 When a PRIORITY frame claims to reference a request, the associated ID MUST
 identify a client-initiated bidirectional stream.  A server MUST treat receipt
@@ -600,7 +563,7 @@ A PRIORITY frame that references a non-existent Push ID, a Placeholder ID
 greater than the server's limit, or a Stream ID the client is not yet permitted
 to open MUST be treated as an HTTP_LIMIT_EXCEEDED error.
 
-A PRIORITY frame received on any stream other than a request or control stream
+A PRIORITY frame received on any stream other than the control stream
 MUST be treated as a connection error of type HTTP_WRONG_STREAM.
 
 PRIORITY frames received by a client MUST be treated as a connection error of
