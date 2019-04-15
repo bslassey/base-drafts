@@ -504,7 +504,7 @@ a Push ID (see {{frame-push-promise}}).
 
 In order to ensure that prioritization is processed in a consistent order
 PRIORITY frames MUST be sent on the control stream.  A
-PRIORITY frame received on a request stream MUST be treated
+PRIORITY frame received on any other stream MUST be treated
 as a stream error of type HTTP_UNEXPECTED_FRAME.
 
 
