@@ -498,10 +498,9 @@ HEADERS frames can only be sent on request / push streams.
 The PRIORITY (type=0x2) frame specifies the client-advised priority of a
 request, server push or placeholder.
 
-A PRIORITY frame identifies an element to prioritize.  A Prioritized ID identifies a client-initiated
-request using the corresponding stream ID, a server push using a Push ID (see
-{{frame-push-promise}}), or a placeholder using a Placeholder ID (see
-{{placeholders}}).
+A PRIORITY frame identifies an element to prioritize.  A Prioritized ID identifies
+a client-initiated request using the corresponding stream ID, a server push using a Push ID (see
+{{frame-push-promise}}), or a placeholder using a Placeholder ID (see {{placeholders}}).
 
 In order to ensure that prioritization is processed in a consistent order
 PRIORITY frames MUST be sent on the control stream.  A
