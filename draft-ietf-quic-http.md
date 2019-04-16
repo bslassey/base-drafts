@@ -512,10 +512,10 @@ as a stream error of type HTTP_UNEXPECTED_FRAME.
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|PT |   Empty   |         [Prioritized Element ID (i)]        ...
+|PT |   Empty   |          Prioritized Element ID (i)         ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Priority (i) ...
-+-+-+-+-+-+-+-+-+-+
+|   Encoded Priority (i) ...
++-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+
 ~~~~~~~~~~
 {: #fig-priority title="PRIORITY frame payload"}
 
@@ -536,7 +536,7 @@ The PRIORITY frame payload has the following fields:
     Depending on the value of Prioritized Type, this contains the Stream ID of a
     request stream, the Push ID of a promised resource, or is absent.
 
-  Priority:
+  Encoded Priority:
   : An unsigned variable-length integer representing a priority for the 
     prioritized element (see {{!RFC7540}}, Section 5.3). It should be 
     interpreted as a fixed point number with the radix after the first byte. For
