@@ -546,7 +546,10 @@ The PRIORITY frame payload has the following fields:
     2.000976562 could be encoded as 0x02040. For simple translation into 
     comparable 64 bit integers, an implementation could interpreted the 
     priorities internally as the integer value left shifted by 64 minus the 
-    length of the field in bits. 
+    length of the field in bits. In this senarior encoded 0x02 would be
+    interpreted as 0x0200000000000000 or 144115188075855872, 0x0280 would be
+    interpreted as 0x0280000000000000 or 180143985094819840 and 0x0140 would be
+    interpreted as 0x0140000000000000 or 90071992547409920.
 
 The values for the Prioritized Element Type ({{prioritized-element-types}}) imply
 the interpretation of the associated Element ID fields.
