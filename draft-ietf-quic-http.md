@@ -498,9 +498,9 @@ HEADERS frames can only be sent on request / push streams.
 The PRIORITY (type=0x2) frame specifies the client-advised priority of a
 request or server push.
 
-A PRIORITY frame identifies an element to prioritize.  A Prioritized ID identifies
-a client-initiated request using the corresponding stream ID or a server push using
-a Push ID (see {{frame-push-promise}}).
+A PRIORITY frame identifies an element to prioritize.  A Prioritized ID 
+identifies a client-initiated request using the corresponding stream ID or a 
+server push using a Push ID (see {{frame-push-promise}}).
 
 In order to ensure that prioritization is processed in a consistent order
 PRIORITY frames MUST be sent on the control stream.  A
@@ -537,15 +537,16 @@ The PRIORITY frame payload has the following fields:
     request stream, the Push ID of a promised resource, or is absent.
 
   Priority:
-  : An unsigned variable-length integer representing a priority for the prioritized
-    element (see {{!RFC7540}}, Section 5.3). It should be interpreted as a fixed point
-    number with the radix after the first byte. For lengths greater than one, bytes after
-    the first byte should be interpreted as coming after the radix point and decreasing
-    in signifigance, such that 2.5 could be encoded as 0x0280, 1.25 could be encoded as
-    0x0140 and 2.000976562 could be encoded as 0x02040. For simple translation into
-    comparable 64 bit integers, an implementation could interpreted the priorities 
-    internally as the integer value left shifted by 64 minus the length of the field in
-    bits. 
+  : An unsigned variable-length integer representing a priority for the 
+    prioritized element (see {{!RFC7540}}, Section 5.3). It should be 
+    interpreted as a fixed point number with the radix after the first byte. For
+    lengths greater than one, bytes after the first byte should be interpreted 
+    as coming after the radix point and decreasing in signifigance, such that 
+    2.5 could be encoded as 0x0280, 1.25 could be encoded as 0x0140 and 
+    2.000976562 could be encoded as 0x02040. For simple translation into 
+    comparable 64 bit integers, an implementation could interpreted the 
+    priorities internally as the integer value left shifted by 64 minus the 
+    length of the field in bits. 
 
 The values for the Prioritized Element Type ({{prioritized-element-types}}) imply
 the interpretation of the associated Element ID fields.
@@ -562,8 +563,9 @@ identify a client-initiated bidirectional stream.  A server MUST treat receipt
 of a PRIORITY frame identifying a stream of any other type as a connection error
 of type HTTP_MALFORMED_FRAME.
 
-A PRIORITY frame that references a non-existent Push ID or a Stream ID the client
-is not yet permitted to open MUST be treated as an HTTP_LIMIT_EXCEEDED error.
+A PRIORITY frame that references a non-existent Push ID or a Stream ID the 
+client is not yet permitted to open MUST be treated as an HTTP_LIMIT_EXCEEDED 
+error.
 
 A PRIORITY frame received on any stream other than the control stream
 MUST be treated as a connection error of type HTTP_WRONG_STREAM.
