@@ -538,7 +538,7 @@ The PRIORITY frame payload has the following fields:
 
   Encoded Priority:
   : An unsigned variable-length integer representing a priority for the 
-    prioritized element (see {{!RFC7540}}, Section 5.3). It should be 
+    prioritized element (see {{!RFC7540}}, Section 5.3). It can be 
     interpreted as a fixed point number with the radix after the first byte. For
     lengths greater than one, bytes after the first byte should be interpreted 
     as coming after the radix point and decreasing in signifigance, such that 
