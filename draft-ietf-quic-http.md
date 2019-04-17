@@ -534,7 +534,7 @@ The PRIORITY frame payload has the following fields:
   Prioritized Element ID:
   : A variable-length integer that identifies the element being prioritized.
     Depending on the value of Prioritized Type, this contains the Stream ID of a
-    request stream, the Push ID of a promised resource, or is absent.
+    request stream or the Push ID of a promised resource.
 
   Encoded Priority:
   : An unsigned variable-length integer representing a priority for the 
