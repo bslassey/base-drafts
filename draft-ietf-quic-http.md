@@ -543,7 +543,7 @@ The PRIORITY frame payload has the following fields:
     lengths greater than one, bytes after the first byte should be interpreted 
     as coming after the radix point and decreasing in signifigance, such that 
     2.5 could be encoded as 0x0280, 1.25 could be encoded as 0x0140 and 
-    2.000976562 could be encoded as 0x02040. For simple translation into 
+    2.000976562 could be encoded as 0x02040. For translation into 
     comparable 64 bit integers, an implementation could interpreted the 
     priorities internally as the integer value left shifted by 64 minus the 
     length of the field in bits. In this senarior encoded 0x02 would be
