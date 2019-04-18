@@ -563,7 +563,8 @@ delivery of resources not interlieved can achieve this by reserving the top X bi
 for those priorities and the bottom 6-X bits for differentiating the resources.
 So, if the implementation had four priority buckets, they could have 16 concurrent
 resources within a given priority bucket without risking any of them being
-delivered interleaved.
+delivered interleaved. If a priority bucket has more than 16 outstanding requests
+the client can use an addtional byte and handle an additional 4080 requests.
 
 The values for the Prioritized Element Type ({{prioritized-element-types}}) imply
 the interpretation of the associated Element ID fields.
