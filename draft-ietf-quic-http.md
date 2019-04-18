@@ -552,12 +552,18 @@ radix point and decreasing in signifigance. For translation into comparable 64
 bit integers, an implementation could interpreted the priorities internally as 
 the integer value left shifted by 64 minus the length of the field in bits. 
 
-| Value | Encoded | Wire |64-bit hex representation|64-bit dec representation|
-|-------|---------|------|-------------------------|-------------------------|
-|  2    |  0x02   | 0x02 |  0x0200000000000000     |  144115188075855872     |
-| 2.5   | 0x0280  |0x4280|  0x0280000000000000     |  180143985094819840     |
-| 1.25  | 0x0140  |0x4140|  0x0140000000000000     |  90071992547409920      |
+| Value | Encoded |  Wire  | 64-bit hex representation |
+|-------|---------|--------|---------------------------|
+|  2    |  0x02   |  0x02  |    0x0200000000000000     |
+| 2.5   | 0x0280  | 0x4280 |    0x0280000000000000     |
+| 1.25  | 0x0140  | 0x4140 |    0x0140000000000000     |
 
+An client that has a small set of priority levels but would like to have the
+delivery of resources not interlieved can achieve this by reserving the top X bits
+for those priorities and the bottom 6-X bits for differentiating the resources.
+So, if the implementation had four priority buckets, they could have 16 concurrent
+resources within a given priority bucket without risking any of them being
+delivered interleaved.
 
 The values for the Prioritized Element Type ({{prioritized-element-types}}) imply
 the interpretation of the associated Element ID fields.
