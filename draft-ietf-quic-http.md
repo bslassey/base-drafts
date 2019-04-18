@@ -558,13 +558,14 @@ the integer value left shifted by 64 minus the length of the field in bits.
 | 2.5   | 0x0280  | 0x4280 |    0x0280000000000000     |
 | 1.25  | 0x0140  | 0x4140 |    0x0140000000000000     |
 
-An client that has a small set of priority levels but would like to have the
+A client that has a small set of priority levels but would like to have the
 delivery of resources not interlieved can achieve this by reserving the top X bits
-for those priorities and the bottom 6-X bits for differentiating the resources.
-So, if the implementation had four priority buckets, they could have 16 concurrent
-resources within a given priority bucket without risking any of them being
-delivered interleaved. If a priority bucket has more than 16 outstanding requests
-the client can use an addtional byte and handle an additional 4080 requests.
+for those priorities and the bottom 6-X bits for differentiating the resources and
+not use more than one byte. So, if the implementation had four priority buckets, 
+they could have 16 concurrent resources within a given priority bucket without 
+risking any of them being delivered interleaved. If a priority bucket has more than
+16 outstanding requests the client can use an addtional byte and handle an 
+additional 4080 requests.
 
 The values for the Prioritized Element Type ({{prioritized-element-types}}) imply
 the interpretation of the associated Element ID fields.
