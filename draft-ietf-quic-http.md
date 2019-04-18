@@ -1070,11 +1070,6 @@ priority.
 When a prioritized element is first created, it has a default initial priority
 of 16.
 
-Requests may override the default initial values by including a PRIORTIY frame
-(see {{frame-priority}}) at the beginning of the stream. These priorities
-can be updated by sending a PRIORITY frame on the control stream.
-
-
 ## Server Push
 
 HTTP/3 server push is similar to what is described in HTTP/2 {{!RFC7540}}, but
