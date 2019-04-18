@@ -522,13 +522,13 @@ as a stream error of type HTTP_UNEXPECTED_FRAME.
 The PRIORITY frame payload has the following fields:
 
   PT (Prioritized Element Type):
-  : A two-bit field indicating the type of element being prioritized (see
+  : A one-bit field indicating the type of element being prioritized (see
     {{prioritized-element-types}}). When sent on a request stream, this MUST be
     set to `11`.  When sent on the control stream, this MUST NOT be set to `11`.
 
   
   Empty:
-  : A six-bit field which MUST be zero when sent and MUST be ignored
+  : A seven-bit field which MUST be zero when sent and MUST be ignored
     on receipt.
 
   Prioritized Element ID:
@@ -538,27 +538,34 @@ The PRIORITY frame payload has the following fields:
 
   Encoded Priority:
   : An unsigned variable-length integer representing a priority for the 
-    prioritized element (see {{!RFC7540}}, Section 5.3). It can be 
-    interpreted as a fixed point number with the radix after the first byte. For
-    lengths greater than one, bytes after the first byte should be interpreted 
-    as coming after the radix point and decreasing in signifigance, such that 
-    2.5 could be encoded as 0x0280, 1.25 could be encoded as 0x0140 and 
-    2.000976562 could be encoded as 0x02040. For translation into 
-    comparable 64 bit integers, an implementation could interpreted the 
-    priorities internally as the integer value left shifted by 64 minus the 
-    length of the field in bits. In this senarior encoded 0x02 would be
-    interpreted as 0x0200000000000000 or 144115188075855872, 0x0280 would be
-    interpreted as 0x0280000000000000 or 180143985094819840 and 0x0140 would be
-    interpreted as 0x0140000000000000 or 90071992547409920.
+    prioritized element. When deciding between a set of available resources to
+    serve, a server SHOULD strictly prefer sending resources with a higher 
+    priority to those of a lower priority. If two or more  available resources 
+    have equal priority, they MAY be interleved.
+    
+    
+The Encoded Priority can be interpreted as a fixed point number with the radix 
+after the first six bits (the remaining bits after the 2 bit length encoding). 
+For intengers of length one the value is their normal value. For lengths greater 
+than one, bytes after the first byte should be interpreted as coming after the 
+radix point and decreasing in signifigance. For translation into comparable 64 
+bit integers, an implementation could interpreted the priorities internally as 
+the integer value left shifted by 64 minus the length of the field in bits. 
+
+| Value | Encoded | Wire |64-bit hex representation|64-bit dec representation|
+|-------|---------|------|-------------------------|-------------------------|
+|  2    |  0x02   | 0x02 |  0x0200000000000000     |  144115188075855872     |
+| 2.5   | 0x0280  |0x4280|  0x0280000000000000     |  180143985094819840     |
+| 1.25  | 0x0140  |0x4140|  0x0140000000000000     |  90071992547409920      |
+
 
 The values for the Prioritized Element Type ({{prioritized-element-types}}) imply
 the interpretation of the associated Element ID fields.
 
 | PT Bits | Type Description | Prioritized Element ID Contents |
 | ------- | ---------------- | ------------------------------- |
-| 00      | Request stream   | Stream ID                       |
-| 01      | Push stream      | Push ID                         |
-| 11      | Current stream   | Absent                          |
+|  0      | Request stream   | Stream ID                       |
+|  1      | Push stream      | Push ID                         |
 {: #prioritized-element-types title="Prioritized Element Types"}
 
 When a PRIORITY frame claims to reference a request, the associated ID MUST
