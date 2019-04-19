@@ -512,7 +512,7 @@ as a stream error of type HTTP_UNEXPECTED_FRAME.
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|PT |   Empty   |          Prioritized Element ID (i)         ...
+|T|     Empty    |          Prioritized Element ID (i)         ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Encoded Priority (i) ...
 +-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+
@@ -521,10 +521,9 @@ as a stream error of type HTTP_UNEXPECTED_FRAME.
 
 The PRIORITY frame payload has the following fields:
 
-  PT (Prioritized Element Type):
+  T (Prioritized Element Type):
   : A one-bit field indicating the type of element being prioritized (see
-    {{prioritized-element-types}}). When sent on a request stream, this MUST be
-    set to `11`.  When sent on the control stream, this MUST NOT be set to `11`.
+    {{prioritized-element-types}}).
 
   
   Empty:
@@ -570,7 +569,7 @@ additional 4080 requests.
 The values for the Prioritized Element Type ({{prioritized-element-types}}) imply
 the interpretation of the associated Element ID fields.
 
-| PT Bits | Type Description | Prioritized Element ID Contents |
+| T Bit | Type Description | Prioritized Element ID Contents |
 | ------- | ---------------- | ------------------------------- |
 |  0      | Request stream   | Stream ID                       |
 |  1      | Push stream      | Push ID                         |
